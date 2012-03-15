@@ -28,6 +28,10 @@ h1 {
   color: red;
 }
 
+.instructions {
+	font-weight: bold;
+}
+
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
