@@ -126,7 +126,7 @@ public class SampleWebApplication implements EntryPoint {
 								dialogBox
 										.setText("Remote Procedure Call - Failure");
 								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
+										.addStyleName("error");
 								serverResponseLabel.setHTML(SERVER_ERROR);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -135,7 +135,7 @@ public class SampleWebApplication implements EntryPoint {
 							public void onSuccess(String result) {
 								dialogBox.setText("Remote Procedure Call");
 								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
+										.removeStyleName("error");
 								serverResponseLabel.setHTML(result);
 								dialogBox.center();
 								closeButton.setFocus(true);

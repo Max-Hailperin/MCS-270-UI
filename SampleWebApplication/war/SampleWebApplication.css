@@ -24,7 +24,7 @@ h1 {
   margin: 5px;
 }
 
-.serverResponseLabelError {
+.error {
   color: red;
 }
 
