@@ -1,0 +1,2 @@
+serviceClass: edu.gac.mcs270.ui.client.GreetingService
+path: 7E829D718E3ADC506D8F36335B3B57FF.gwt.rpc
