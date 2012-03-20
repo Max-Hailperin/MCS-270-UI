@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -77,8 +78,9 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		final StackPanel greetingsPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
+		greetingsPanel.setSize("30em", "20em"); //width and length of comment box after expand
 		greetingsScrollPanel.setSize("50em", "30em");
 		greetingsScrollPanel.add(greetingsPanel);
 		final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
