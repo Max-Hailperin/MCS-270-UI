@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -54,8 +55,14 @@ public class SampleWebApplication implements EntryPoint {
 		instructionsLabel.addStyleName("instructions");
 		
 		// Create some panels to hold the widgets together
+		
+		//revision
 		final VerticalPanel mainPanel = new VerticalPanel();
+		
+		
 		final HorizontalPanel entryPanel = new HorizontalPanel();
+		
+		//revision
 		final VerticalPanel outerPanel = new VerticalPanel();
 		outerPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
 		
@@ -77,7 +84,7 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		final StackPanel greetingsPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
 		greetingsScrollPanel.setSize("50em", "30em");
 		greetingsScrollPanel.add(greetingsPanel);
@@ -124,15 +131,16 @@ public class SampleWebApplication implements EntryPoint {
 				sendButton.setEnabled(false);
 				if(firstTime)
 					firstTime = false;
-				else
-					// separate usages with a horizontal rule
-					greetingsPanel.add(new HTML("<hr/>"));
-				final Label textToServerLabel = new Label(textToServer);
+//				else 
+//					// separate usages with a horizontal rule
+//					greetingsPanel.add(new HTML("<hr/>"));
+				//final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
+				//greetingsPanel.insert(new HTML("<b>Sending name to the server:</b>"), 0);
+				//greetingsPanel.insert(textToServerLabel, 0);
+				//greetingsPanel.insert(new HTML("<br><b>Server replies:</b>"), 2);
+				greetingsPanel.insert(serverResponseLabel, 0);
+				greetingsPanel.showStack(0);
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
