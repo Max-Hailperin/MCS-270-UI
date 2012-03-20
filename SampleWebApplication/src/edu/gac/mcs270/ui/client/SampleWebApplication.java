@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.StackPanel;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -41,10 +43,12 @@ public class SampleWebApplication implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		final Label instructionsLabel = new Label("Please enter your name:");
+		final Label instructionsLabel = new Label("Please enter your name and how you are feeling today:");
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
+		final TextBox feelingField = new TextBox();
+		nameField.setText("Name?");
+		feelingField.setText("Are you well or not well?");
 		final Label errorLabel = new Label();
 		errorLabel.setHeight("1em"); // so it doesn't change with vs w/o text
 
@@ -61,6 +65,7 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Assemble the widgets into the panels
 		entryPanel.add(nameField);
+		entryPanel.add(feelingField);
 		entryPanel.add(sendButton);
 		mainPanel.add(instructionsLabel);
 		mainPanel.add(entryPanel);
@@ -77,7 +82,8 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		//final VerticalPanel greetingsPanel = new VerticalPanel();
+		final StackPanel greetingsPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
 		greetingsScrollPanel.setSize("50em", "30em");
 		greetingsScrollPanel.add(greetingsPanel);
@@ -90,13 +96,14 @@ public class SampleWebApplication implements EntryPoint {
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
-			private boolean firstTime = true;
+//			private boolean firstTime = true;
 			
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
 				sendNameToServer();
+	
 			}
 
 			/**
@@ -119,20 +126,29 @@ public class SampleWebApplication implements EntryPoint {
 					errorLabel.setText("Please enter at least four characters");
 					return;
 				}
+				String feelingToServer  = feelingField.getText();
+			    if (!FieldVerifier.isValidName(feelingToServer)) {
+					errorLabel.setText("Please enter at least four characters");
+					return;
+				}
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
-				if(firstTime)
-					firstTime = false;
-				else
+	//			if(firstTime)
+	//				firstTime = false;
+	//			else
 					// separate usages with a horizontal rule
-					greetingsPanel.add(new HTML("<hr/>"));
-				final Label textToServerLabel = new Label(textToServer);
+	//				greetingsPanel.add(new HTML("<hr/>"));
+				//final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
+				//greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
+				//greetingsPanel.add(textToServerLabel);
+				//greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
+				//greetingsPanel.add(serverResponseLabel, textToServer);
+				greetingsPanel.insert(serverResponseLabel, 0); 
+				greetingsPanel.setStackText(0,textToServer);
+				greetingsPanel.showStack(0);
+				
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
@@ -143,12 +159,26 @@ public class SampleWebApplication implements EntryPoint {
 							}
 
 							public void onSuccess(String result) {
+								if (feelingField.getText().contains("Are you")){ 
+									feelingField.setText("Pardon me for caring...");
+								} else if (feelingField.getText().contains("not well")) { 
+									feelingField.removeStyleName("feelgood");
+									feelingField.addStyleName("feelbad");
+									feelingField.setText("Oh No! Feel Better!");
+									
+								}
+								else {
+									feelingField.removeStyleName("feelbad");
+									feelingField.addStyleName("feelgood");
+									feelingField.setText("Good! I'm glad!");
+							
+								}
 								display(result);
 							}
 							
 							private void display(String message){
 								serverResponseLabel.setHTML(message);
-								greetingsScrollPanel.scrollToBottom();
+								greetingsScrollPanel.scrollToTop();
 								sendButton.setEnabled(true);
 								sendButton.setFocus(true);
 							}
@@ -160,5 +190,6 @@ public class SampleWebApplication implements EntryPoint {
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+		feelingField.addKeyUpHandler(handler);
 	}
 }
