@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -77,16 +78,17 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
-		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
-		greetingsScrollPanel.setSize("50em", "30em");
-		greetingsScrollPanel.add(greetingsPanel);
-		final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
-		greetingsCaptionPanel.add(greetingsScrollPanel);
-		final Label spacer = new Label();
-		spacer.setHeight("1em");
-		outerPanel.add(spacer);
-		outerPanel.add(greetingsCaptionPanel);
+		final StackPanel greetingsPanel = new StackPanel();
+		//final ScrollPanel greetingsScrollPanel = new ScrollPanel();
+		//greetingsScrollPanel.setSize("50em", "30em");
+		//greetingsScrollPanel.add(greetingsPanel);
+		//final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
+		//greetingsCaptionPanel.add(greetingsScrollPanel);
+		//final Label spacer = new Label();
+		//spacer.setHeight("1em");
+		//outerPanel.add(spacer);
+		outerPanel.add(greetingsPanel);
+		outerPanel.insert(new HTML("<img src=\"http://www.mytinyphone.com/uploads/users/cacique/sm2/101455.gif\">"), 0);
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -121,7 +123,7 @@ public class SampleWebApplication implements EntryPoint {
 				}
 
 				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
+				//sendButton.setEnabled(false);
 				if(firstTime)
 					firstTime = false;
 				else
@@ -129,10 +131,14 @@ public class SampleWebApplication implements EntryPoint {
 					greetingsPanel.add(new HTML("<hr/>"));
 				final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
+				
+				//greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
+				//greetingsPanel.add(textToServerLabel);
+				//greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
+				greetingsPanel.insert(serverResponseLabel, 0);
+				greetingsPanel.setStackText(0, nameField.getText()); ///////////
+				greetingsPanel.showStack(0);
+				
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
@@ -148,7 +154,7 @@ public class SampleWebApplication implements EntryPoint {
 							
 							private void display(String message){
 								serverResponseLabel.setHTML(message);
-								greetingsScrollPanel.scrollToBottom();
+								//greetingsScrollPanel.scrollToBottom();
 								sendButton.setEnabled(true);
 								sendButton.setFocus(true);
 							}
