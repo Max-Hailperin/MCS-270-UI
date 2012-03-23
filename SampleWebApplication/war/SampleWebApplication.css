@@ -2,10 +2,12 @@
 
 
 /** Example rules used by the template application (remove for your app) */
+
 h1 {
   font-size: 2em;
   font-weight: bold;
-  color: #777777;
+  background-color:#6495ed;
+  color: #FF0000;
   margin: 40px 0px 70px;
   text-align: center;
 }
@@ -13,19 +15,29 @@ h1 {
 .sendButton {
   display: block;
   font-size: 16pt;
+  color: blue;
+  background-color: red;
 }
+
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
   width: 400px;
+  color: yellow;
+}
+
+.nameField {
+	color: yellow;
+	font-size: 20pt;
 }
 
 .dialogVPanel {
   margin: 5px;
+  color: red;
 }
 
 .error {
-  color: red;
+  color: blue;
 }
 
 .instructions {

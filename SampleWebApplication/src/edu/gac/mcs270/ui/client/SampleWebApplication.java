@@ -122,13 +122,13 @@ public class SampleWebApplication implements EntryPoint {
 				// First, we validate the input.
 				errorLabel.setText("");
 				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
-					return;
+			if (!FieldVerifier.isValidName(textToServer)) {
+				errorLabel.setText("Please enter at least four characters");
+				return;
 				}
 
 				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
+				//sendButton.setEnabled(false);
 				if(firstTime)
 					firstTime = false;
 //				else 
@@ -139,6 +139,7 @@ public class SampleWebApplication implements EntryPoint {
 				//greetingsPanel.insert(new HTML("<b>Sending name to the server:</b>"), 0);
 				//greetingsPanel.insert(textToServerLabel, 0);
 				//greetingsPanel.insert(new HTML("<br><b>Server replies:</b>"), 2);
+				greetingsPanel.setStackText(0, textToServer);
 				greetingsPanel.insert(serverResponseLabel, 0);
 				greetingsPanel.showStack(0);
 				greetingService.greetServer(textToServer,
