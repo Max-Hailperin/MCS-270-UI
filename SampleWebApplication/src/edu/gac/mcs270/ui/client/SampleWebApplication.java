@@ -1,6 +1,5 @@
 package edu.gac.mcs270.ui.client;
 
-import edu.gac.mcs270.ui.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,8 +15,11 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import edu.gac.mcs270.ui.shared.FieldVerifier;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -43,6 +45,7 @@ public class SampleWebApplication implements EntryPoint {
 	public void onModuleLoad() {
 		final Label instructionsLabel = new Label("Please enter your name:");
 		final Button sendButton = new Button("Send");
+		final Button removeButton = new Button ("Remove Oldest");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
 		final Label errorLabel = new Label();
@@ -50,6 +53,7 @@ public class SampleWebApplication implements EntryPoint {
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
+		removeButton.addStyleName("removeButton");
 		errorLabel.addStyleName("error");
 		instructionsLabel.addStyleName("instructions");
 		
@@ -62,6 +66,7 @@ public class SampleWebApplication implements EntryPoint {
 		// Assemble the widgets into the panels
 		entryPanel.add(nameField);
 		entryPanel.add(sendButton);
+		entryPanel.add(removeButton);
 		mainPanel.add(instructionsLabel);
 		mainPanel.add(entryPanel);
 		mainPanel.add(errorLabel);
@@ -77,10 +82,11 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		
+		final StackPanel greetingsStackPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
 		greetingsScrollPanel.setSize("50em", "30em");
-		greetingsScrollPanel.add(greetingsPanel);
+		greetingsScrollPanel.add(greetingsStackPanel);
 		final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
 		greetingsCaptionPanel.add(greetingsScrollPanel);
 		final Label spacer = new Label();
@@ -90,7 +96,6 @@ public class SampleWebApplication implements EntryPoint {
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
-			private boolean firstTime = true;
 			
 			/**
 			 * Fired when the user clicks on the sendButton.
@@ -122,17 +127,12 @@ public class SampleWebApplication implements EntryPoint {
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
-				if(firstTime)
-					firstTime = false;
-				else
-					// separate usages with a horizontal rule
-					greetingsPanel.add(new HTML("<hr/>"));
-				final Label textToServerLabel = new Label(textToServer);
+		
+				
 				final HTML serverResponseLabel = new HTML();
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
+				greetingsStackPanel.insert(serverResponseLabel, 0);
+				greetingsStackPanel.setStackText(0, textToServer);
+				greetingsStackPanel.showStack(0);	
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
@@ -148,7 +148,7 @@ public class SampleWebApplication implements EntryPoint {
 							
 							private void display(String message){
 								serverResponseLabel.setHTML(message);
-								greetingsScrollPanel.scrollToBottom();
+								greetingsScrollPanel.scrollToTop();
 								sendButton.setEnabled(true);
 								sendButton.setFocus(true);
 							}
@@ -156,9 +156,14 @@ public class SampleWebApplication implements EntryPoint {
 			}
 		}
 
-		// Add a handler to send the name to the server
+		// Add a handler to send the name to the server and to the removeOldest Button
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+		removeButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				greetingsStackPanel.remove(greetingsStackPanel.getWidgetCount() - 1);
+			}
+		});
 	}
 }
