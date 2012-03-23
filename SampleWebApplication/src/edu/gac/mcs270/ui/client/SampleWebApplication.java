@@ -130,6 +130,7 @@ public class SampleWebApplication implements EntryPoint {
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
+				nameField.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
