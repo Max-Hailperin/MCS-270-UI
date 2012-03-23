@@ -1,6 +1,5 @@
 package edu.gac.mcs270.ui.client;
 
-import edu.gac.mcs270.ui.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,13 +9,17 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import edu.gac.mcs270.ui.shared.FieldVerifier;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -42,64 +45,58 @@ public class SampleWebApplication implements EntryPoint {
 	public void onModuleLoad() {
 		final Label instructionsLabel = new Label("Please enter your name:");
 		final Button sendButton = new Button("Send");
+		final Button removeButton = new Button ("Remove Oldest");
 		final TextBox nameField = new TextBox();
 		nameField.setText("GWT User");
 		final Label errorLabel = new Label();
+		errorLabel.setHeight("1em"); // so it doesn't change with vs w/o text
 
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
+		removeButton.addStyleName("removeButton");
 		errorLabel.addStyleName("error");
 		instructionsLabel.addStyleName("instructions");
 		
 		// Create some panels to hold the widgets together
 		final VerticalPanel mainPanel = new VerticalPanel();
 		final HorizontalPanel entryPanel = new HorizontalPanel();
+		final VerticalPanel outerPanel = new VerticalPanel();
+		outerPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
 		
 		// Assemble the widgets into the panels
 		entryPanel.add(nameField);
 		entryPanel.add(sendButton);
+		entryPanel.add(removeButton);
 		mainPanel.add(instructionsLabel);
 		mainPanel.add(entryPanel);
 		mainPanel.add(errorLabel);
+		outerPanel.add(mainPanel);
 
-		// Add the mainPanel to the RootPanel
+		// Add the outerPanel to the RootPanel
 		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("applicationContainer").add(mainPanel);
+		RootPanel.get("applicationContainer").add(outerPanel);
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
-
-		// Create the popup dialog box
-		final DialogBox dialogBox = new DialogBox();
-		dialogBox.setText("Remote Procedure Call");
-		dialogBox.setAnimationEnabled(true);
-		final Button closeButton = new Button("Close");
-		// We can set the id of a widget by accessing its Element
-		closeButton.getElement().setId("closeButton");
-		final Label textToServerLabel = new Label();
-		final HTML serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
-		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-		dialogVPanel.add(closeButton);
-		dialogBox.setWidget(dialogVPanel);
-
-		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				dialogBox.hide();
-				sendButton.setEnabled(true);
-				sendButton.setFocus(true);
-			}
-		});
+		
+		// Instead of displaying each greeting in a dialog box,
+		// accumulate them into a scrolling display.
+		
+		final StackPanel greetingsStackPanel = new StackPanel();
+		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
+		greetingsScrollPanel.setSize("50em", "30em");
+		greetingsScrollPanel.add(greetingsStackPanel);
+		final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
+		greetingsCaptionPanel.add(greetingsScrollPanel);
+		final Label spacer = new Label();
+		spacer.setHeight("1em");
+		outerPanel.add(spacer);
+		outerPanel.add(greetingsCaptionPanel);
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
+			
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
@@ -130,36 +127,43 @@ public class SampleWebApplication implements EntryPoint {
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
-				serverResponseLabel.setText("");
+		
+				
+				final HTML serverResponseLabel = new HTML();
+				greetingsStackPanel.insert(serverResponseLabel, 0);
+				greetingsStackPanel.setStackText(0, textToServer);
+				greetingsStackPanel.showStack(0);	
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
 								serverResponseLabel
 										.addStyleName("error");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
+								display(SERVER_ERROR);
 							}
 
 							public void onSuccess(String result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("error");
-								serverResponseLabel.setHTML(result);
-								dialogBox.center();
-								closeButton.setFocus(true);
+								display(result);
+							}
+							
+							private void display(String message){
+								serverResponseLabel.setHTML(message);
+								greetingsScrollPanel.scrollToTop();
+								sendButton.setEnabled(true);
+								sendButton.setFocus(true);
 							}
 						});
 			}
 		}
 
-		// Add a handler to send the name to the server
+		// Add a handler to send the name to the server and to the removeOldest Button
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+		removeButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				greetingsStackPanel.remove(greetingsStackPanel.getWidgetCount() - 1);
+			}
+		});
 	}
 }
