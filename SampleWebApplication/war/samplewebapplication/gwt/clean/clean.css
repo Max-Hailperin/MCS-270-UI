@@ -25,7 +25,7 @@ body {
   margin: 10px;
   border: 0px;
   padding: 0px;
-  background: #fff;
+  background: #ddd;
   direction: ltr;
 }
 a, a:visited {
@@ -282,6 +282,7 @@ select {
 
 .gwt-HTML {
   padding: 0 0px;
+  background-color: #ddd;
 }
 
 .gwt-Hyperlink {
@@ -525,7 +526,7 @@ select {
 }
 
 .gwt-PopupPanelGlass {
-  background-color: #000;
+  background-color: #ddd;
   opacity: 0.3;
   filter: alpha(opacity=30);
 }
@@ -674,7 +675,7 @@ select {
 .gwt-StackPanel .gwt-StackPanelContent {
   border: 1px solid #bbbbbb;
   border-bottom: 0px;
-  background: white;
+  background: #ddd;
   padding: 2px 2px 10px 5px;
 }
 
