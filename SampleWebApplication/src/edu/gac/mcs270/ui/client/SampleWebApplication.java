@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -77,7 +78,7 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		final StackPanel greetingsPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
 		greetingsScrollPanel.setSize("50em", "30em");
 		greetingsScrollPanel.add(greetingsPanel);
@@ -124,15 +125,19 @@ public class SampleWebApplication implements EntryPoint {
 				sendButton.setEnabled(false);
 				if(firstTime)
 					firstTime = false;
-				else
-					// separate usages with a horizontal rule
-					greetingsPanel.add(new HTML("<hr/>"));
+				
 				final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
+				
+				/**
 				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
 				greetingsPanel.add(textToServerLabel);
 				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
 				greetingsPanel.add(serverResponseLabel);
+				*/
+				
+				
+				
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
@@ -148,7 +153,10 @@ public class SampleWebApplication implements EntryPoint {
 							
 							private void display(String message){
 								serverResponseLabel.setHTML(message);
-								greetingsScrollPanel.scrollToBottom();
+								greetingsPanel.insert(new HTML(message), 0);
+								greetingsPanel.setStackText(0,textToServerLabel.toString(), true);
+								greetingsScrollPanel.scrollToTop();
+								greetingsPanel.showStack(0);
 								sendButton.setEnabled(true);
 								sendButton.setFocus(true);
 							}
