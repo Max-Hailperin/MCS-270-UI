@@ -129,15 +129,6 @@ public class SampleWebApplication implements EntryPoint {
 				final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
 				
-				/**
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
-				*/
-				
-				
-				
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
