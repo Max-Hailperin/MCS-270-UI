@@ -4,6 +4,8 @@ import edu.gac.mcs270.ui.client.GreetingService;
 import edu.gac.mcs270.ui.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+
+
 /**
  * The server side implementation of the RPC service.
  */
@@ -26,6 +28,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		// Escape data from the client to avoid cross-site script vulnerabilities.
 		input = escapeHtml(input);
 		userAgent = escapeHtml(userAgent);
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return "Hello, " + input + "!<br><br>I am running " + serverInfo
 				+ ".<br><br>It looks like you are using:<br>" + userAgent;
@@ -45,4 +53,5 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;");
 	}
+	
 }
