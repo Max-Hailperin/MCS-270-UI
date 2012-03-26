@@ -5,11 +5,14 @@
 h1 {
   font-size: 2em;
   font-weight: bold;
-  color: #777777;
+  color: #FFCC00;
   margin: 40px 0px 70px;
   text-align: center;
 }
 
+.body {
+background: white url(http://www.leapoffaithfarms.net/wood%20Background_02.jpg) no-repeat;
+}
 .sendButton {
   display: block;
   font-size: 16pt;
@@ -21,7 +24,7 @@ h1 {
 }
 
 .dialogVPanel {
-  margin: 5px;
+  margin: 10px;
 }
 
 .error {
@@ -30,9 +33,11 @@ h1 {
 
 .instructions {
 	font-weight: bold;
+	color: #FFCC00;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
+
 }
