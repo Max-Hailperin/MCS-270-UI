@@ -13,9 +13,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -48,6 +50,8 @@ public class SampleWebApplication implements EntryPoint {
 		final Label errorLabel = new Label();
 		errorLabel.setHeight("1em"); // so it doesn't change with vs w/o text
 
+		
+		
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 		errorLabel.addStyleName("error");
@@ -65,7 +69,7 @@ public class SampleWebApplication implements EntryPoint {
 		mainPanel.add(instructionsLabel);
 		mainPanel.add(entryPanel);
 		mainPanel.add(errorLabel);
-		outerPanel.add(mainPanel);
+		outerPanel.add(mainPanel);     
 
 		// Add the outerPanel to the RootPanel
 		// Use RootPanel.get() to get the entire body element
@@ -77,8 +81,10 @@ public class SampleWebApplication implements EntryPoint {
 		
 		// Instead of displaying each greeting in a dialog box,
 		// accumulate them into a scrolling display.
-		final VerticalPanel greetingsPanel = new VerticalPanel();
+		
+		final StackPanel greetingsPanel = new StackPanel();
 		final ScrollPanel greetingsScrollPanel = new ScrollPanel();
+		greetingsPanel.setSize("30em", "20em"); //width and length of comment box after expand
 		greetingsScrollPanel.setSize("50em", "30em");
 		greetingsScrollPanel.add(greetingsPanel);
 		final CaptionPanel greetingsCaptionPanel = new CaptionPanel("Greetings");
@@ -124,15 +130,17 @@ public class SampleWebApplication implements EntryPoint {
 				sendButton.setEnabled(false);
 				if(firstTime)
 					firstTime = false;
-				else
-					// separate usages with a horizontal rule
-					greetingsPanel.add(new HTML("<hr/>"));
-				final Label textToServerLabel = new Label(textToServer);
 				final HTML serverResponseLabel = new HTML();
-				greetingsPanel.add(new HTML("<b>Sending name to the server:</b>"));
-				greetingsPanel.add(textToServerLabel);
-				greetingsPanel.add(new HTML("<br><b>Server replies:</b>"));
-				greetingsPanel.add(serverResponseLabel);
+				
+//				testPanel.add(new HTML("<b>Sending name to the server:</b><br>"));
+//				testPanel.add(textToServerLabel);
+//				testPanel.add(new HTML("<br><b>Server replies:</b>"));
+//				testPanel.add(serverResponseLabel);
+				
+				greetingsPanel.insert(serverResponseLabel, 0);
+				greetingsPanel.setStackText(0, textToServer);
+				greetingsPanel.showStack(0);
+				
 				greetingService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
@@ -148,7 +156,7 @@ public class SampleWebApplication implements EntryPoint {
 							
 							private void display(String message){
 								serverResponseLabel.setHTML(message);
-								greetingsScrollPanel.scrollToBottom();
+								greetingsScrollPanel.scrollToTop();
 								sendButton.setEnabled(true);
 								sendButton.setFocus(true);
 							}
