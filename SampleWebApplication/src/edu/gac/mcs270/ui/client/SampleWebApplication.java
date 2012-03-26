@@ -156,13 +156,14 @@ public class SampleWebApplication implements EntryPoint {
 							}
 						});
 				
+				
 			}
 		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
-		//nameField.setEnabled(true);
 		nameField.addKeyUpHandler(handler);
+		nameField.setEnabled(true);
 	}
 }
