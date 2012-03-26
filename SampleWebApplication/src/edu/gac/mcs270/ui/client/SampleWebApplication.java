@@ -130,6 +130,7 @@ public class SampleWebApplication implements EntryPoint {
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
+				nameField.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
@@ -154,12 +155,14 @@ public class SampleWebApplication implements EntryPoint {
 								closeButton.setFocus(true);
 							}
 						});
+				
 			}
 		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
+		//nameField.setEnabled(true);
 		nameField.addKeyUpHandler(handler);
 	}
 }
