@@ -5,14 +5,17 @@
 h1 {
   font-size: 2em;
   font-weight: bold;
-  color: #777777;
+  color: purple;
   margin: 40px 0px 70px;
   text-align: center;
+  background-color: #b0c4de;
+  /*background-image:('imgres-1.jpeg');
+  */
 }
 
 .sendButton {
   display: block;
-  font-size: 16pt;
+  font-size: 40pt;
 }
 
 /** Most GWT widgets already have a style name defined */
@@ -25,7 +28,7 @@ h1 {
 }
 
 .error {
-  color: red;
+  color: blue;
 }
 
 .instructions {
@@ -35,4 +38,9 @@ h1 {
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
+}
+
+body{
+	background-color: #b0c4de;
+	background-image:{'imgres-1.jpeg'};
 }
